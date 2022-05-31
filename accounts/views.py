@@ -1,8 +1,10 @@
+import http
+from django.http import HttpResponse, HttpResponseRedirect 
 from django.shortcuts import render,redirect
 from django.contrib.auth import login,authenticate
 from .models import tbl_Authentication
     # Create your views here.
-
+import random
 from urllib import response
 import django
 from rest_framework import viewsets
@@ -29,14 +31,31 @@ import requests
 tib=[]
 def index(request):
     books=models.libraryModel.objects.all()
-    
     return render(request, "viewbook.html",{'main':books})
 
-def books(request):
-                                                                                                                         
+def books(request):                                                                                                    
     books=models.libraryModel.objects.all()
     return render(request, "pages/tables.html",{'main':books})
-     
+
+# name = models.CharField(max_length = 200)
+#     author = models.CharField(max_length = 200)
+#     description = models.TextField()
+#     isbn
+def create(request):
+    if request.method == 'POST':
+        nme=request.POST['nme']
+        aut=request.POST['apsw']
+        des=request.POST['dsw']
+        rnd=random.randint(0,521212)
+        nwdat=libraryModel(name=nme,author=aut,description=des,isbn=rnd)
+        nwdat.save()
+        return HttpResponseRedirect("books")
+
+def delete(request):
+    isbnid=request.GET['id']
+    libraryModel.objects.filter(isbn=isbnid).delete()
+    return HttpResponseRedirect("books")
+
 def base(request):
     return render(request, 'base.html')
     
